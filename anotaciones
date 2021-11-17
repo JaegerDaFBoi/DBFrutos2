@@ -1,0 +1,13 @@
+Pasos seguidos para creacion de metodos crud en el sistema
+- Crear la clase interfaz para cada una de las entidades
+Ejemplo:
+  public interface I<Nombrederepositoriodeentidad>
+  {
+    <Aqui se crean los metodos a llamar>
+    IEnumerable<Usuario> GetUsuarios();
+    Usuario AddUsuario(Usuario usuario);
+    Usuario UpdateUsuario(Usuario usuario);
+    void DeleteUsuario(int idUsuario);
+    Usuario GetUsuario(int idUsuario);
+  }
+- Crear los metodos dentro de la clase Repo<Nombre Entidad> y aplicar herencia a la interfaz del repo especifico
