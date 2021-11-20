@@ -4,6 +4,7 @@ using DBFrutos2.Persistencia;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DBFrutos2.Persistencia.Migrations
 {
     [DbContext(typeof(AppContext))]
-    partial class AppContextModelSnapshot : ModelSnapshot
+    [Migration("20211120011458_ModeloSegundaVersion")]
+    partial class ModeloSegundaVersion
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -30,10 +32,15 @@ namespace DBFrutos2.Persistencia.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
+                    b.Property<int>("UsuarioId")
+                        .HasColumnType("int");
+
                     b.Property<int>("pedidoId")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("UsuarioId");
 
                     b.HasIndex("pedidoId");
 
@@ -71,7 +78,7 @@ namespace DBFrutos2.Persistencia.Migrations
                     b.Property<int>("UsuarioId")
                         .HasColumnType("int");
 
-                    b.Property<float>("ValorProducto")
+                    b.Property<float>("Valor")
                         .HasColumnType("real");
 
                     b.HasKey("Id");
@@ -107,13 +114,23 @@ namespace DBFrutos2.Persistencia.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<float>("ValorVenta")
+                    b.Property<float>("Valor")
                         .HasColumnType("real");
 
                     b.Property<float>("Valor_Declarado")
                         .HasColumnType("real");
 
+                    b.Property<int>("inventarioId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("usuarioId")
+                        .HasColumnType("int");
+
                     b.HasKey("Id");
+
+                    b.HasIndex("inventarioId");
+
+                    b.HasIndex("usuarioId");
 
                     b.ToTable("Pedidos");
                 });
@@ -181,11 +198,19 @@ namespace DBFrutos2.Persistencia.Migrations
 
             modelBuilder.Entity("DBFrutos2.Dominio.Factura", b =>
                 {
+                    b.HasOne("DBFrutos2.Dominio.Usuario", "Usuario")
+                        .WithMany()
+                        .HasForeignKey("UsuarioId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.HasOne("DBFrutos2.Dominio.SolicitudPedidos", "pedido")
                         .WithMany()
                         .HasForeignKey("pedidoId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.Navigation("Usuario");
 
                     b.Navigation("pedido");
                 });
@@ -199,6 +224,25 @@ namespace DBFrutos2.Persistencia.Migrations
                         .IsRequired();
 
                     b.Navigation("Usuario");
+                });
+
+            modelBuilder.Entity("DBFrutos2.Dominio.Pedido", b =>
+                {
+                    b.HasOne("DBFrutos2.Dominio.Inventario", "inventario")
+                        .WithMany()
+                        .HasForeignKey("inventarioId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("DBFrutos2.Dominio.Usuario", "usuario")
+                        .WithMany()
+                        .HasForeignKey("usuarioId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("inventario");
+
+                    b.Navigation("usuario");
                 });
 
             modelBuilder.Entity("DBFrutos2.Dominio.SolicitudPedidos", b =>

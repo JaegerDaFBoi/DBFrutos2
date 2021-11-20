@@ -7,10 +7,8 @@ namespace DBFrutos2.Dominio
     public class Pedido
     {
         public int Id { get; set;}
-        public Usuario usuario { get; set; }
-        public Inventario inventario { get; set; }
         public int Cantidad { get; set; }
-        public float Valor { get; set; }
+        public float ValorVenta { get; set; }
         public DateTime Fecha_Hora { get; set; }
         public string Empresa_Envio { get; set; }
         public string Metodo_Pago { get; set; }
